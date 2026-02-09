@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Event - <%= event.title %></title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+  
+  <div class="container">
+    <%- include('partials/flash') %>
+    
+    <header>
+      <h1>Edit Event</h1>
+      <p>Update event information</p>
+    </header>
+
+    <div class="form-container">
+      <form action="/events/<%= event.id %>?_method=PUT" method="POST">
+        <div class="form-group">
+          <label for="title">Event Title *</label>
+          <input type="text" id="title" name="title" required value="<%= event.title %>">
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description *</label>
+          <textarea id="description" name="description" required><%= event.description %></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="date">Event Date *</label>
+          <input type="date" id="date" name="date" required 
+                 value="<%= new Date(event.date).toISOString().split('T')[0] %>">
+        </div>
+
+        <div class="form-group">
+          <label for="location">Location *</label>
+          <input type="text" id="location" name="location" required value="<%= event.location %>">
+        </div>
+
+        <div class="form-group">
+          <label for="organizer">Organizer Name *</label>
+          <input type="text" id="organizer" name="organizer" required value="<%= event.organizer %>">
+        </div>
+
+        <div class="form-group">
+          <label for="category">Category *</label>
+          <select id="category" name="category" required>
+            <option value="Conference" <%= event.category === 'Conference' ? 'selected' : '' %>>Conference</option>
+            <option value="Workshop" <%= event.category === 'Workshop' ? 'selected' : '' %>>Workshop</option>
+            <option value="Seminar" <%= event.category === 'Seminar' ? 'selected' : '' %>>Seminar</option>
+            <option value="Cultural" <%= event.category === 'Cultural' ? 'selected' : '' %>>Cultural</option>
+            <option value="Sports" <%= event.category === 'Sports' ? 'selected' : '' %>>Sports</option>
+            <option value="Other" <%= event.category === 'Other' ? 'selected' : '' %>>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="capacity">Event Capacity *</label>
+          <input type="number" id="capacity" name="capacity" required min="<%= event.registrations %>" value="<%= event.capacity %>">
+          <small style="color: #718096; display: block; margin-top: 5px;">
+            Current registrations: <%= event.registrations %> (capacity must be at least this number)
+          </small>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-success">Update Event</button>
+          <a href="/events/<%= event.id %>" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Events - Event Hosting Platform</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+  
+  <div class="container">
+    <%- include('partials/flash') %>
+    
+    <header>
+      <h1>🎯 My Events</h1>
+      <p>Events you have created</p>
+    </header>
+
+    <div class="actions">
+      <a href="/events/new" class="btn btn-success">+ Create New Event</a>
+    </div>
+
+    <% if (events.length === 0) { %>
+      <div class="empty-state">
+        <h3>You haven't created any events yet</h3>
+        <p>Start hosting events by creating your first one!</p>
+      </div>
+    <% } else { %>
+      <div class="events-grid">
+        <% events.forEach(event => { %>
+          <div class="event-card">
+            <span class="category"><%= event.category %></span>
+            <h3><%= event.title %></h3>
+            <p><strong>📅 Date:</strong> <%= new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+            <p><strong>📍 Location:</strong> <%= event.location %></p>
+            <p><strong>👤 Organizer:</strong> <%= event.organizer %></p>
+            <p class="description"><%= event.description.substring(0, 100) %><%= event.description.length > 100 ? '...' : '' %></p>
+            
+            <div class="capacity-info <%= event.registrations >= event.capacity ? 'full' : 'available' %>">
+              <%= event.registrations %> / <%= event.capacity %> registered
+              <% if (event.registrations >= event.capacity) { %>
+                - FULL
+              <% } else { %>
+                - <%= event.capacity - event.registrations %> spots left
+              <% } %>
+            </div>
+
+            <div class="card-actions">
+              <a href="/events/<%= event.id %>" class="btn">View Details</a>
+              <a href="/events/<%= event.id %>/edit" class="btn btn-secondary">Edit</a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</body>
+</html>

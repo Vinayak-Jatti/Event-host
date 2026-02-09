@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Event Hosting Platform</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('partials/navbar') %>
+  
+  <div class="container">
+    <%- include('partials/flash') %>
+    
+    <header>
+      <h1>📊 Dashboard</h1>
+      <p>Your event hosting statistics</p>
+    </header>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-value"><%= stats.totalEvents %></div>
+        <div class="stat-label">Events Created</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-value"><%= stats.upcomingEvents %></div>
+        <div class="stat-label">Upcoming Events</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value"><%= stats.totalRegistrations %></div>
+        <div class="stat-label">My Registrations</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px;">
+      <h2 style="margin-bottom: 20px;">Recent Events</h2>
+      
+      <% if (stats.myEvents.length === 0) { %>
+        <div class="empty-state">
+          <h3>No events created yet</h3>
+          <p>Start by creating your first event!</p>
+          <a href="/events/new" class="btn btn-success">Create Event</a>
+        </div>
+      <% } else { %>
+        <div class="events-grid">
+          <% stats.myEvents.forEach(event => { %>
+            <div class="event-card">
+              <span class="category"><%= event.category %></span>
+              <h3><%= event.title %></h3>
+              <p><strong>📅 Date:</strong> <%= new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+              <p><strong>📍 Location:</strong> <%= event.location %></p>
+              
+              <div class="capacity-info <%= event.registrations >= event.capacity ? 'full' : 'available' %>">
+                <%= event.registrations %> / <%= event.capacity %> registered
+              </div>
+
+              <div class="card-actions">
+                <a href="/events/<%= event.id %>" class="btn">View Details</a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>
